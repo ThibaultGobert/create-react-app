@@ -87,7 +87,6 @@ module.exports = {
     // for React Native Web.
     extensions: ['.web.js', '.mjs', '.js', '.json', '.web.jsx', '.jsx', 'es6'],
     alias: {
-      
       // Support React Native Web
       // https://www.smashingmagazine.com/2016/08/a-glimpse-into-the-future-with-react-native-for-web/
       'react-native': 'react-native-web',
@@ -104,88 +103,103 @@ module.exports = {
   module: {
     // strictExportPresence: true,
     loaders: [
-      { test: /\.jsx$/, loader: 'babel-loader', 
-      /*...*/ },
-      { test: /\.js$/, loader: 'babel-loader',  include: [
-        path.resolve(__dirname, paths.appNodeModules + '/scratch3.0-integration'),
-        path.resolve(__dirname, paths.appSrc)
-        ]
+      {
+        test: /\.jsx$/,
+        loader: 'babel-loader',
+        /*...*/
       },
- 
-  
-    
+      {
+        test: /\.js$/,
+        loader: 'babel-loader',
+        include: [
+          path.resolve(
+            __dirname,
+            paths.appNodeModules + '/scratch3.0-integration'
+          ),
+          path.resolve(__dirname, paths.appSrc),
+        ],
+      },
+
       { test: /\.scss$/, loader: 'style-loader!css-loader!sass-loader!' },
-      { test: /\.(eot|woff|woff2|ttf)$/, loader: 'url-loader?limit=100000'},
-      
-      { test: /\.(svg|png|wav)$/, loader: 'file-loader'},
+      { test: /\.(eot|woff|woff2|ttf)$/, loader: 'url-loader?limit=100000' },
+
+      { test: /\.(svg|png|wav)$/, loader: 'file-loader' },
       {
         test: /\.css$/,
-         exclude: [
-            path.resolve(__dirname, paths.appNodeModules + '/scratch3.0-integration')
+        exclude: [
+          path.resolve(
+            __dirname,
+            paths.appNodeModules + '/scratch3.0-integration'
+          ),
         ],
-        
-        use: [{
+
+        use: [
+          {
             loader: 'style-loader',
-        },
+          },
           {
             loader: 'css-loader',
             options: {
               importLoaders: 1,
             },
           },
-             {
-        loader: 'postcss-loader',
-        options: {
-            ident: 'postcss',
-            plugins: function () {
+          {
+            loader: 'postcss-loader',
+            options: {
+              ident: 'postcss',
+              plugins: function() {
                 return [
-                    postcssImport,
-                    postcssVars,
-                    autoprefixer({
-                        browsers: ['last 3 versions', 'Safari >= 8', 'iOS >= 8']
-                    })
+                  postcssImport,
+                  postcssVars,
+                  autoprefixer({
+                    browsers: ['last 3 versions', 'Safari >= 8', 'iOS >= 8'],
+                  }),
                 ];
-            }
-        }
-    }
+              },
+            },
+          },
         ],
       },
       {
-        test: /\.css$/, 
+        test: /\.css$/,
         include: [
-        //  path.resolve(__dirname, 'modules'),
-         path.resolve(__dirname, paths.appNodeModules + '/scratch3.0-integration')
+          //  path.resolve(__dirname, 'modules'),
+          path.resolve(
+            __dirname,
+            paths.appNodeModules + '/scratch3.0-integration'
+          ),
         ],
-           
-        
-          use: [{
+
+        use: [
+          {
             loader: 'style-loader',
-          }, {
-              loader: 'css-loader',
-              options: {
-                  modules: true,
-                  importLoaders: 1,
-                  localIdentName: '[name]_[local]_[hash:base64:5]',
-                  camelCase: true,
-              },
+          },
+          {
+            loader: 'css-loader',
+            options: {
+              modules: true,
+              importLoaders: 1,
+              localIdentName: '[name]_[local]_[hash:base64:5]',
+              camelCase: true,
+            },
           },
           {
             loader: 'postcss-loader',
             options: {
-                ident: 'postcss',
-                plugins: function () {
-                    return [
-                        postcssImport,
-                        postcssVars,
-                        autoprefixer({
-                            browsers: ['last 3 versions', 'Safari >= 8', 'iOS >= 8']
-                        })
-                    ];
-                }
-            }
-        }
-          ]
-      }
+              ident: 'postcss',
+              plugins: function() {
+                return [
+                  postcssImport,
+                  postcssVars,
+                  autoprefixer({
+                    browsers: ['last 3 versions', 'Safari >= 8', 'iOS >= 8'],
+                  }),
+                ];
+              },
+            },
+          },
+        ],
+      },
     ],
   },
   plugins: [
@@ -223,27 +237,31 @@ module.exports = {
     new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
     new webpack.optimize.OccurrenceOrderPlugin(),
     // new webpack.NoEmitOnErrorsPlugin(),
-    new CopyWebpackPlugin([{
-      from: 'static',
-      to: 'static'
-    }]),
-    new CopyWebpackPlugin([{
-        from: 'node_modules/scratch-blocks/media',
-        to: 'static/blocks-media'
-    }]),
-    new CopyWebpackPlugin([{
-        from: 'node_modules/scratch-vm/dist/node/assets',
-        to: 'static/extension-assets'
-    }]),
-    new CopyWebpackPlugin([{
-        from: 'node_modules/scratch3.0-integration/src/examples/extensions/**',
+    new CopyWebpackPlugin([
+      {
+        from: 'static',
         to: 'static',
-        context: 'src/examples'
-    }]),
-    new CopyWebpackPlugin([{
+      },
+    ]),
+    new CopyWebpackPlugin([
+      {
+        from: 'node_modules/scratch-blocks/media',
+        to: 'static/blocks-media',
+      },
+    ]),
+    new CopyWebpackPlugin([
+      {
+        from: 'extensions/**',
+        to: 'static',
+        context: 'src/examples',
+      },
+    ]),
+    new CopyWebpackPlugin([
+      {
         from: 'extension-worker.{js,js.map}',
-        context: 'node_modules/scratch-vm/dist/web'
-    }])    
+        context: 'node_modules/scratch-vm/dist/web',
+      },
+    ]),
   ],
 
   // Some libraries import Node modules but don't use them in the browser.
